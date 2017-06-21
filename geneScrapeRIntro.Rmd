@@ -1,0 +1,206 @@
+---
+title: "geneScrapeR"
+output: ioslides_presentation
+---
+
+## Functions
+
+- Currently there are two funcitons in the package geneScrapeR
+    - scrapeIDs
+    - scrapeGenes
+- scrapeIDs uses the package rentrez to search NCBI databases
+- scrapeGenes uses the package pubmed.mineR to extract the genes from the publications
+
+## rentrez
+
+- rentrez searches NCBI databases within R
+- Uses Entrez Utilities API
+- [rentrez tutorial](https://ropensci.org/tutorials/rentrez_tutorial.html)
+
+## pubmed.mineR
+
+- Most of the functions in pubmed.mineR are used on abstracts downloaded from PubMed
+- One exception, pubtator_function, contacts the PubTator website and extracts article information
+
+## Using Downloaded Abstracts
+<img src="C:\Users\mart077\Documents\pubmedText.png" align = 'middle' width = '650' height = '525' >
+
+## Using Downloaded Abstracts
+
+```{r,echo=FALSE,message=FALSE,results='hide'}
+library (pubmed.mineR)
+```
+
+```{r,comment='',message=FALSE,error=FALSE,warning=FALSE}
+abstracts <- readabs('pubmed_result3.txt')
+
+abstracts@PMID[1:5]
+
+genes3 <- gene_atomization (abstracts)
+
+genes3[3, ]
+```
+
+## PubTator
+
+- The pubmed.mineR function pubtator_function accesses the PubTator website
+- This website allows us to extract the genes from each article
+- [PubTator](https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/PubTator/index.cgi?user=User237763554)
+
+## PubTator Information
+
+- From PubTator we have access to
+    - Chemicals
+    - Diseases
+    - Genes
+    - Mutation
+    - Species
+- pubtator_function also works with IDs from other databases from NCBI
+
+## Workflow
+
+<img src="C:\Users\mart077\Documents\geneWorkFlow.jpg" width = '350' height = '550'>
+
+## scrapeIDs
+
+```{r,comment='',echo=FALSE,results='hide',message=FALSE}
+library (geneScrapeR)
+library (magrittr)
+library (dplyr)
+library (ggplot2)
+options (tibble.print_min = 5)
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+```
+
+```{r,comment='',collapse=TRUE}
+pmids <- scrapeIDs (dataBase = 'pubmed',
+                    term = 'prostate cancer')
+length(pmids)
+
+pmids[1:5]
+
+pmids2 <- scrapeIDs (dataBase = 'pubmed',
+                     term = '"prostate cancer"')
+length(pmids2)
+
+pmids2[1:5]
+```
+
+## scrapeGenes
+
+```{r,comment=''}
+genes <- scrapeGenes (IDs = pmids[1:500], nCores = 7, nTries = 5)
+
+genes
+```
+
+## Plots
+
+```{r,echo=FALSE,fig.align='center'}
+genes2 <- scrapeGenes (IDs = pmids2[1:500], nCores = 7, nTries = 45)
+
+plot1 <- genes %>%
+  arrange (-n) %>%
+  head (25) %>%
+  mutate (geneNames = factor (geneNames, geneNames)) %>%
+  ggplot () +
+  geom_bar (mapping = aes (x = geneNames, y = n),
+            stat = 'identity',
+            width = 0.5) +
+  ggtitle ('Search: prostate cancer') +
+  xlab ('Gene') +
+  ylab ('Counts') +
+  theme (axis.text.x = element_text (angle = 90, hjust = 1))
+
+plot2<- genes2 %>%
+  arrange (-n) %>%
+  head (25) %>%
+  mutate (geneNames = factor (geneNames, geneNames)) %>%
+  ggplot () +
+  geom_bar (mapping = aes (x = geneNames, y = n),
+            stat = 'identity',
+            width = 0.5) +
+  ggtitle ('Search: "prostate cancer"') +
+  xlab ('Gene') +
+  ylab ('Counts') +
+  theme (axis.text.x = element_text (angle = 90, hjust = 1))
+
+multiplot (plot1, plot2, cols = 2)  
+```
+
+## NCBI Search Options
+
+- Logical operators
+    - AND: returns articles that match both terms
+    - OR: returns articles that match either term
+    - NOT: return articles that contain the left term but not the right term
+- Fields
+    - Organism, MeSH Terms, Date - Publication, Title/Abstract
+    - To use fields enclose them in square brackets e.g. [Title/Abstract]
+- You can find all available fields for each database with the advanced search option
+
+## Search: Logical Operators
+
+```{r,comment=''}
+malaria <- scrapeIDs (dataBase = 'pubmed',
+                      term = '(vivax malaria[MeSH Terms]) AND
+                      (folic acid antagonists[MeSH Terms])')
+length (malaria)
+
+malaria2 <- scrapeIDs (dataBase = 'pubmed',
+                       term = '(vivax malaria[MeSH Terms]) OR
+                       (folic acid antagonists[MeSH Terms])')
+length (malaria2)
+```
+
+## Search: Fields
+
+```{r,comment=''}
+alzheimer <- scrapeIDs (dataBase = 'pubmed',
+                        term = 'alzheimer')
+length (alzheimer)
+
+alzheimer2 <- scrapeIDs (dataBase = 'pubmed',
+                         term = 'alzheimer[MeSH Terms]')
+length (alzheimer2)
+```
+
+## MeSH Terms
+
+From the NCBI website - MeSH (Medical Subject Headings) is the NLM controlled vocabulary thesaurus used for indexing articles for PubMed.
+
+A list of other terms can be found on the NCBI website [here](https://www.ncbi.nlm.nih.gov/books/NBK3827/#pubmedhelp.Search_Field_Descriptions_and)
