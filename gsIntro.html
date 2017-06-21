@@ -35,6 +35,200 @@ class: center, middle, inverse, title-slide
 - rentrez searches NCBI databases within R
 - Uses Entrez Utilities API
 - [rentrez tutorial](https://ropensci.org/tutorials/rentrez_tutorial.html)
+
+---
+
+## pubmed.mineR
+
+- Most of the functions in pubmed.mineR are used on abstracts downloaded from PubMed
+- One exception, pubtator_function, contacts the PubTator website and extracts article information
+
+---
+
+## Using Downloaded Abstracts
+
+&lt;img src="C:\Users\mart077\Documents\pubmedText.png" align = 'middle' width = '650' height = '525' &gt;
+
+---
+
+## Using Downloaded Abstracts
+
+
+
+
+```r
+abstracts &lt;- readabs('pubmed_result3.txt')
+
+abstracts@PMID[1:5]
+```
+
+```
+[1]       NA       NA 27720625 27638045       NA
+```
+
+```r
+genes3 &lt;- gene_atomization (abstracts)
+
+genes3[3, ]
+```
+
+```
+       Gene_symbol              Genes               Freq 
+              "CS" "citrate synthase"               "15" 
+```
+
+---
+
+## PubTator
+
+- The pubmed.mineR function pubtator_function accesses the PubTator website
+- This website allows us to extract the genes from each article
+- [PubTator](https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/PubTator/index.cgi?user=User237763554)
+
+---
+
+## PubTator Information
+
+- From PubTator we have access to
+    - Chemicals
+    - Diseases
+    - Genes
+    - Mutation
+    - Species
+- pubtator_function also works with IDs from other databases from NCBI
+
+---
+
+## Workflow
+
+&lt;img src="C:\Users\mart077\Documents\geneWorkFlow.jpg" width = '350' height = '550'&gt;
+
+---
+
+## scrapeIDs
+
+
+
+
+```r
+pmids &lt;- scrapeIDs (dataBase = 'pubmed',
+                    term = 'prostate cancer')
+length(pmids)
+[1] 146277
+
+pmids[1:5]
+[1] "28632693" "28632688" "28632505" "28632486" "28632242"
+
+pmids2 &lt;- scrapeIDs (dataBase = 'pubmed',
+                     term = '"prostate cancer"')
+length(pmids2)
+[1] 93140
+
+pmids2[1:5]
+[1] "28632693" "28632688" "28632505" "28632486" "28631917"
+```
+
+---
+
+## scrapeGenes
+
+
+```r
+genes &lt;- scrapeGenes (IDs = pmids[1:500], nCores = 7, nTries = 5)
+
+genes
+```
+
+```
+# A tibble: 155 x 2
+  geneNames     n
+      &lt;chr&gt; &lt;int&gt;
+1     ABCA1     1
+2    ABCC10     1
+3      AKT1     3
+4      AKT2     1
+5      AKT3     1
+# ... with 150 more rows
+```
+
+---
+
+## Plots
+
+&lt;img src="gsIntro_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## NCBI Search Options
+
+- Logical operators
+    - AND: returns articles that match both terms
+    - OR: returns articles that match either term
+    - NOT: return articles that contain the left term but not the right term
+- Fields
+    - Organism, MeSH Terms, Date - Publication, Title/Abstract
+    - To use fields enclose them in square brackets e.g. [Title/Abstract]
+- You can find all available fields for each database with the advanced search option
+
+---
+
+## Search: Logical Operators
+
+
+```r
+malaria &lt;- scrapeIDs (dataBase = 'pubmed',
+                      term = '(vivax malaria[MeSH Terms]) AND
+                      (folic acid antagonists[MeSH Terms])')
+length (malaria)
+```
+
+```
+[1] 12
+```
+
+```r
+malaria2 &lt;- scrapeIDs (dataBase = 'pubmed',
+                       term = '(vivax malaria[MeSH Terms]) OR
+                       (folic acid antagonists[MeSH Terms])')
+length (malaria2)
+```
+
+```
+[1] 8521
+```
+
+---
+
+## Search: Fields
+
+
+```r
+alzheimer &lt;- scrapeIDs (dataBase = 'pubmed',
+                        term = 'alzheimer')
+length (alzheimer)
+```
+
+```
+[1] 92079
+```
+
+```r
+alzheimer2 &lt;- scrapeIDs (dataBase = 'pubmed',
+                         term = 'alzheimer[MeSH Terms]')
+length (alzheimer2)
+```
+
+```
+[1] 77772
+```
+
+---
+
+## MeSH Terms
+
+From the NCBI website - MeSH (Medical Subject Headings) is the NLM controlled vocabulary thesaurus used for indexing articles for PubMed.
+
+A list of other terms can be found on the NCBI website [here](https://www.ncbi.nlm.nih.gov/books/NBK3827/#pubmedhelp.Search_Field_Descriptions_and)
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
