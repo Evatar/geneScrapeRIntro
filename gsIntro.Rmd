@@ -1,6 +1,6 @@
 ---
 title: "geneScrapeR"
-subtitle: "⚔<br/>with xaringan"
+subtitle:
 author: "Evan A Martin"
 date: "06/21/2017"
 output:
