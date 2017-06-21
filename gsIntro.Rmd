@@ -1,0 +1,33 @@
+---
+title: "geneScrapeR"
+subtitle: "⚔<br/>with xaringan"
+author: "Evan A Martin"
+date: "06/21/2017"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+## Functions
+
+- Currently there are two funcitons in the package geneScrapeR
+    - scrapeIDs
+    - scrapeGenes
+- scrapeIDs uses the package rentrez to search NCBI databases
+- scrapeGenes uses the package pubmed.mineR to extract the genes from the publications
+
+---
+
+## rentrez
+
+- rentrez searches NCBI databases within R
+- Uses Entrez Utilities API
+- [rentrez tutorial](https://ropensci.org/tutorials/rentrez_tutorial.html)
