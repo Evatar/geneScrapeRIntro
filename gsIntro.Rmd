@@ -99,41 +99,7 @@ library (magrittr)
 library (dplyr)
 library (ggplot2)
 options (tibble.print_min = 5)
-multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
-  library(grid)
-
-  # Make a list from the ... arguments and plotlist
-  plots <- c(list(...), plotlist)
-
-  numPlots = length(plots)
-
-  # If layout is NULL, then use 'cols' to determine layout
-  if (is.null(layout)) {
-    # Make the panel
-    # ncol: Number of columns of plots
-    # nrow: Number of rows needed, calculated from # of cols
-    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
-                    ncol = cols, nrow = ceiling(numPlots/cols))
-  }
-
- if (numPlots==1) {
-    print(plots[[1]])
-
-  } else {
-    # Set up the page
-    grid.newpage()
-    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
-
-    # Make each plot, in the correct location
-    for (i in 1:numPlots) {
-      # Get the i,j matrix positions of the regions that contain this subplot
-      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
-
-      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
-                                      layout.pos.col = matchidx$col))
-    }
-  }
-}
+load ('markdownData.Rdata')
 ```
 
 ```{r,comment='',collapse=TRUE}
@@ -155,7 +121,7 @@ pmids2[1:5]
 ## scrapeGenes
 
 ```{r,comment=''}
-genes <- scrapeGenes (IDs = pmids[1:500], nCores = 7, nTries = 5)
+genes <- scrapeGenes (IDs = pmids[1:100], nCores = 7, nTries = 5)
 
 genes
 ```
@@ -164,10 +130,15 @@ genes
 
 ## Plots
 
-```{r,echo=FALSE,fig.align='center'}
-genes2 <- scrapeGenes (IDs = pmids2[1:500], nCores = 7, nTries = 45)
+```{r,echo=FALSE,fig.align='center',fig.width=10,}
+# genes1 <- scrapeGenes (IDs = pmids[1:2000],
+#                        nCores = 7,
+#                        nTries = 5)
+# genes2 <- scrapeGenes (IDs = pmids2[1:2000],
+#                        nCores = 7,
+#                        nTries = 45)
 
-plot1 <- genes %>%
+plot1 <- genes1 %>%
   arrange (-n) %>%
   head (25) %>%
   mutate (geneNames = factor (geneNames, geneNames)) %>%
@@ -215,13 +186,13 @@ multiplot (plot1, plot2, cols = 2)
 
 ```{r,comment=''}
 malaria <- scrapeIDs (dataBase = 'pubmed',
-                      term = '(vivax malaria[MeSH Terms]) AND
-                      (folic acid antagonists[MeSH Terms])')
+                      term = '(vivax malaria) AND
+                      (folic acid antagonists)')
 length (malaria)
 
 malaria2 <- scrapeIDs (dataBase = 'pubmed',
-                       term = '(vivax malaria[MeSH Terms]) OR
-                       (folic acid antagonists[MeSH Terms])')
+                       term = '(vivax malaria) OR
+                       (folic acid antagonists)')
 length (malaria2)
 ```
 
@@ -235,8 +206,62 @@ alzheimer <- scrapeIDs (dataBase = 'pubmed',
 length (alzheimer)
 
 alzheimer2 <- scrapeIDs (dataBase = 'pubmed',
-                         term = 'alzheimer[MeSH Terms]')
+                         term = 'alzheimer [MeSH Terms]')
 length (alzheimer2)
+```
+
+---
+
+## Search: Dates
+
+```{r,comment=''}
+prostate06 <- scrapeIDs (dataBase = 'pubmed',
+                         term = '(prostate cancer) AND 2006 [DP]')
+length (prostate06)
+
+prostate16 <- scrapeIDs (dataBase = 'pubmed',
+                         term = '(prostate cancer) AND 2016 [DP]')
+length (prostate16)
+```
+
+---
+
+## Genes 2006 vs 2016
+
+```{r,echo=FALSE,fig.align='center',fig.width=10}
+# genes06 <- scrapeGenes (IDs = prostate06,
+#                         nCores = 7,
+#                         nTries = 5)
+# genes16 <- scrapeGenes (IDs = prostate16,
+#                         nCores = 7,
+#                         nTries = 5)
+plot3 <- genes06 %>%
+  arrange (-n) %>%
+  head (25) %>%
+  mutate (geneNames = factor (geneNames, geneNames)) %>%
+  ggplot () +
+  geom_bar (mapping = aes (x = geneNames, y = n),
+            stat = 'identity',
+            width = 0.5) +
+  ggtitle ('Prostate Cancer 2006') +
+  xlab ('Gene') +
+  ylab ('Counts') +
+  theme (axis.text.x = element_text (angle = 90, hjust = 1))
+
+plot4 <- genes16 %>%
+  arrange (-n) %>%
+  head (25) %>%
+  mutate (geneNames = factor (geneNames, geneNames)) %>%
+  ggplot () +
+  geom_bar (mapping = aes (x = geneNames, y = n),
+            stat = 'identity',
+            width = 0.5) +
+  ggtitle ('Prostate Cancer 2016') +
+  xlab ('Gene') +
+  ylab ('Counts') +
+  theme (axis.text.x = element_text (angle = 90, hjust = 1))
+
+multiplot (plot3, plot4, cols = 2)  
 ```
 
 ---
@@ -245,5 +270,7 @@ length (alzheimer2)
 
 From the NCBI website - MeSH (Medical Subject Headings) is the NLM controlled vocabulary thesaurus used for indexing articles for PubMed.
 
-A list of other terms can be found at [PubMed Help](https://www.ncbi.nlm.nih.gov/books/NBK3827/#pubmedhelp.Search_Field_Descriptions_and).
+A list of other terms and more detailed descriptions can be found at [PubMed Help](https://www.ncbi.nlm.nih.gov/books/NBK3827/#pubmedhelp.Search_Field_Descriptions_and).
+
+
 
