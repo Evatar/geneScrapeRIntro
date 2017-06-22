@@ -233,6 +233,14 @@ length (alzheimer2)
 
 ---
 
+## MeSH Terms
+
+From the NCBI website - MeSH (Medical Subject Headings) is the NLM controlled vocabulary thesaurus used for indexing articles for PubMed.
+
+A list of other terms and more detailed descriptions can be found at [PubMed Help](https://www.ncbi.nlm.nih.gov/books/NBK3827/#pubmedhelp.Search_Field_Descriptions_and).
+
+---
+
 ## Search: Dates
 
 ```{r,comment=''}
@@ -285,7 +293,9 @@ plot4 <- genes16 %>%
 multiplot (plot3, plot4, cols = 2)  
 ```
 
-## Difference in Genes
+---
+
+## Differences in Genes
 
 ```{r,comment='',echo=FALSE}
 genes062 <- genes06 %>%
@@ -299,13 +309,7 @@ genes162 <- genes16 %>%
   head (25) %>%
   mutate (geneNames = factor (geneNames, geneNames)) %>%
   arrange (geneNames)
-```
 
----
-
-## Differences in Genes
-
-```{r,echo=FALSE,comment=''}
 difference06 <- tibble(in06 = setdiff(genes062$geneNames, genes162$geneNames))
 
 difference062 <- difference06 %>%
@@ -321,14 +325,4 @@ difference <- tibble (in06 = difference062$in06, in16 = difference162$in16)
 difference %>%
   print (n = 14)
 ```
-
----
-
-## MeSH Terms
-
-From the NCBI website - MeSH (Medical Subject Headings) is the NLM controlled vocabulary thesaurus used for indexing articles for PubMed.
-
-A list of other terms and more detailed descriptions can be found at [PubMed Help](https://www.ncbi.nlm.nih.gov/books/NBK3827/#pubmedhelp.Search_Field_Descriptions_and).
-
-
 
