@@ -67,9 +67,9 @@ genes3[3, ]
 
 ## PubTator
 
-- The pubmed.mineR function pubtator_function accesses the PubTator website
+- The pubmed.mineR function pubtator_function accesses the PubTator [website](https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/PubTator/index.cgi?user=User237763554)
 - This website allows us to extract the genes from each article
-- [PubTator](https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/PubTator/index.cgi?user=User237763554)
+- PubTator also has a [tutorial](https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/PubTator/tutorial/)
 
 ---
 
@@ -245,5 +245,5 @@ length (alzheimer2)
 
 From the NCBI website - MeSH (Medical Subject Headings) is the NLM controlled vocabulary thesaurus used for indexing articles for PubMed.
 
-A list of other terms can be found on the NCBI website [here](https://www.ncbi.nlm.nih.gov/books/NBK3827/#pubmedhelp.Search_Field_Descriptions_and)
+A list of other terms can be found at [PubMed Help](https://www.ncbi.nlm.nih.gov/books/NBK3827/#pubmedhelp.Search_Field_Descriptions_and).
 

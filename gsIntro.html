@@ -81,9 +81,9 @@ genes3[3, ]
 
 ## PubTator
 
-- The pubmed.mineR function pubtator_function accesses the PubTator website
+- The pubmed.mineR function pubtator_function accesses the PubTator [website](https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/PubTator/index.cgi?user=User237763554)
 - This website allows us to extract the genes from each article
-- [PubTator](https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/PubTator/index.cgi?user=User237763554)
+- PubTator also has a [tutorial](https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/PubTator/tutorial/)
 
 ---
 
@@ -114,18 +114,18 @@ genes3[3, ]
 pmids &lt;- scrapeIDs (dataBase = 'pubmed',
                     term = 'prostate cancer')
 length(pmids)
-[1] 146277
+[1] 146301
 
 pmids[1:5]
-[1] "28632693" "28632688" "28632505" "28632486" "28632242"
+[1] "28637005" "28636979" "28636973" "28636713" "28636526"
 
 pmids2 &lt;- scrapeIDs (dataBase = 'pubmed',
                      term = '"prostate cancer"')
 length(pmids2)
-[1] 93140
+[1] 93161
 
 pmids2[1:5]
-[1] "28632693" "28632688" "28632505" "28632486" "28631917"
+[1] "28637005" "28636979" "28636713" "28636389" "28636142"
 ```
 
 ---
@@ -140,7 +140,7 @@ genes
 ```
 
 ```
-# A tibble: 155 x 2
+# A tibble: 151 x 2
   geneNames     n
       &lt;chr&gt; &lt;int&gt;
 1     ABCA1     1
@@ -148,7 +148,7 @@ genes
 3      AKT1     3
 4      AKT2     1
 5      AKT3     1
-# ... with 150 more rows
+# ... with 146 more rows
 ```
 
 ---
@@ -194,7 +194,7 @@ length (malaria2)
 ```
 
 ```
-[1] 8521
+[1] 8522
 ```
 
 ---
@@ -209,7 +209,7 @@ length (alzheimer)
 ```
 
 ```
-[1] 92079
+[1] 92104
 ```
 
 ```r
@@ -219,7 +219,7 @@ length (alzheimer2)
 ```
 
 ```
-[1] 77772
+[1] 77793
 ```
 
 ---
@@ -228,7 +228,7 @@ length (alzheimer2)
 
 From the NCBI website - MeSH (Medical Subject Headings) is the NLM controlled vocabulary thesaurus used for indexing articles for PubMed.
 
-A list of other terms can be found on the NCBI website [here](https://www.ncbi.nlm.nih.gov/books/NBK3827/#pubmedhelp.Search_Field_Descriptions_and)
+A list of other terms can be found at [PubMed Help](https://www.ncbi.nlm.nih.gov/books/NBK3827/#pubmedhelp.Search_Field_Descriptions_and).
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
