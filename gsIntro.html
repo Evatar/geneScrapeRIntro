@@ -159,6 +159,20 @@ genes
 
 ---
 
+## Differences in Genes
+
+
+```
+# A tibble: 3 x 1
+  `prostate cancer`
+              &lt;chr&gt;
+1             AMACR
+2             EPCAM
+3               RET
+```
+
+---
+
 ## NCBI Search Options
 
 - Logical operators
@@ -229,29 +243,58 @@ length (alzheimer2)
 
 ```r
 prostate06 &lt;- scrapeIDs (dataBase = 'pubmed',
-                         term = '(prostate cancer) AND 2006 [DP]')
+                         term = '("prostate cancer") AND 2006 [DP]')
 length (prostate06)
 ```
 
 ```
-[1] 5553
+[1] 3964
 ```
 
 ```r
 prostate16 &lt;- scrapeIDs (dataBase = 'pubmed',
-                         term = '(prostate cancer) AND 2016 [DP]')
+                         term = '("prostate cancer") AND 2016 [DP]')
 length (prostate16)
 ```
 
 ```
-[1] 10022
+[1] 8405
 ```
 
 ---
 
 ## Genes 2006 vs 2016
 
-&lt;img src="gsIntro_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="gsIntro_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+
+## Difference in Genes
+
+
+
+---
+
+## Differences in Genes
+
+
+```
+# A tibble: 14 x 2
+     in06    in16
+    &lt;chr&gt;   &lt;chr&gt;
+ 1    BAD    BCL2
+ 2    CD4    CD44
+ 3 CDC25C CYP17A1
+ 4   CDK2    EZH2
+ 5   CDK4   FOXA1
+ 6    CGA    GRPR
+ 7  CHEK2  HOXB13
+ 8 CYP1A1    KLK3
+ 9   ETV1    MDM2
+10  GSTM1    MMP9
+11    HK2    MTOR
+12    SP1    PCA3
+13    VDR    TP53
+14   XIAP    ZEB1
+```
 
 ---
 

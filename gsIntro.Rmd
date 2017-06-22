@@ -169,6 +169,27 @@ multiplot (plot1, plot2, cols = 2)
 
 ---
 
+## Differences in Genes
+
+```{r,echo=FALSE,comment=''}
+genes12 <- genes1 %>%
+  arrange (-n) %>%
+  head (25) %>%
+  mutate (geneNames = factor (geneNames, geneNames))
+
+genes22<- genes2 %>%
+  arrange (-n) %>%
+  head (25) %>%
+  mutate (geneNames = factor (geneNames, geneNames))
+
+difference <- tibble(`prostate cancer` = setdiff(genes12$geneNames, genes22$geneNames))
+
+difference %>%
+  print (n = 15)
+```
+
+---
+
 ## NCBI Search Options
 
 - Logical operators
@@ -216,11 +237,11 @@ length (alzheimer2)
 
 ```{r,comment=''}
 prostate06 <- scrapeIDs (dataBase = 'pubmed',
-                         term = '(prostate cancer) AND 2006 [DP]')
+                         term = '("prostate cancer") AND 2006 [DP]')
 length (prostate06)
 
 prostate16 <- scrapeIDs (dataBase = 'pubmed',
-                         term = '(prostate cancer) AND 2016 [DP]')
+                         term = '("prostate cancer") AND 2016 [DP]')
 length (prostate16)
 ```
 
@@ -262,6 +283,43 @@ plot4 <- genes16 %>%
   theme (axis.text.x = element_text (angle = 90, hjust = 1))
 
 multiplot (plot3, plot4, cols = 2)  
+```
+
+## Difference in Genes
+
+```{r,comment='',echo=FALSE}
+genes062 <- genes06 %>%
+  arrange (-n) %>%
+  head (25) %>%
+  mutate (geneNames = factor (geneNames, geneNames)) %>%
+  arrange (geneNames)
+
+genes162 <- genes16 %>%
+  arrange (-n) %>%
+  head (25) %>%
+  mutate (geneNames = factor (geneNames, geneNames)) %>%
+  arrange (geneNames)
+```
+
+---
+
+## Differences in Genes
+
+```{r,echo=FALSE,comment=''}
+difference06 <- tibble(in06 = setdiff(genes062$geneNames, genes162$geneNames))
+
+difference062 <- difference06 %>%
+  arrange (in06)
+
+difference16 <- tibble(in16 = setdiff(genes162$geneNames, genes062$geneNames))
+
+difference162 <- difference16 %>%
+  arrange (in16)
+
+difference <- tibble (in06 = difference062$in06, in16 = difference162$in16)
+
+difference %>%
+  print (n = 14)
 ```
 
 ---
